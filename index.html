@@ -1,0 +1,383 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Compressor & Expander</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .ad-placeholder {
+            background-color: #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4b5563;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="container mx-auto p-4 max-w-4xl">
+        <!-- Header -->
+        <header class="text-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-800">Photo Compressor & Expander</h1>
+            <p class="text-gray-600 mt-2">Compress or expand your photos with ease</p>
+        </header>
+
+        <!-- Top Ad Space (Single) -->
+        <div class="ad-placeholder h-24 mb-6">
+            Ad Space (728x90)
+        </div>
+
+        <!-- Main Content -->
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <!-- File Input -->
+            <div class="mb-4">
+                <label class="block text-gray-700 font-medium mb-2" for="imageInput">
+                    Upload Image
+                </label>
+                <input type="file" id="imageInput" accept="image/*" class="block w-full text-sm text-gray-500
+                    file:mr-4 file:py-2 file:px-4
+                    file:rounded-md file:border-0
+                    file:text-sm file:font-semibold
+                    file:bg-blue-50 file:text-blue-700
+                    hover:file:bg-blue-100">
+            </div>
+
+            <!-- Initial Selection Screen -->
+            <div id="selectionScreen" class="block">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Choose an Action</h3>
+                <div class="flex gap-4">
+                    <button id="compressBtn" class="flex-1 py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                        Compress Image
+                    </button>
+                    <button id="expandBtn" class="flex-1 py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                        Expand Image
+                    </button>
+                </div>
+            </div>
+
+            <!-- Compress Section -->
+            <div id="compressSection" class="hidden">
+                <div class="flex items-center mb-4">
+                    <button id="compressBackBtn" class="text-blue-600 hover:underline mr-4">← Back</button>
+                    <h3 class="text-lg font-semibold text-gray-800">Compress Image</h3>
+                </div>
+                <p class="text-gray-600 mb-4">Reduce file size by lowering quality</p>
+                <!-- Slider for Compression Quality -->
+                <div class="mb-4">
+                    <label for="compressSlider" class="block text-gray-700 font-medium mb-2">
+                        Compression Quality (1-100): <span id="compressQualityValue">50</span>
+                    </label>
+                    <input type="range" id="compressSlider" min="1" max="100" value="50" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                </div>
+                <!-- Size Info -->
+                <div class="mb-4 text-gray-700">
+                    <p>Original Size: <span id="compressOriginalSize">N/A</span></p>
+                    <p>Compressed Size: <span id="compressNewSize">N/A</span></p>
+                    <p>Size Reduction: <span id="compressSizeChange">N/A</span></p>
+                </div>
+                <!-- Image Preview and Canvas -->
+                <div class="flex flex-col md:flex-row gap-4 mb-4">
+                    <div class="w-full md:w-1/2">
+                        <h4 class="text-gray-700 font-medium mb-2">Original Image</h4>
+                        <img id="compressOriginalImage" class="max-w-full h-auto rounded-md hidden" alt="Original Image">
+                    </div>
+                    <div class="w-full md:w-1/2">
+                        <h4 class="text-gray-700 font-medium mb-2">Compressed Image</h4>
+                        <canvas id="compressCanvas" class="max-w-full h-auto rounded-md border border-gray-300"></canvas>
+                    </div>
+                </div>
+                <!-- Download Button -->
+                <button id="compressDownloadBtn" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:bg-gray-400" disabled>
+                    Download Compressed Image
+                </button>
+            </div>
+
+            <!-- Expand Section -->
+            <div id="expandSection" class="hidden">
+                <div class="flex items-center mb-4">
+                    <button id="expandBackBtn" class="text-blue-600 hover:underline mr-4">← Back</button>
+                    <h3 class="text-lg font-semibold text-gray-800">Expand Image</h3>
+                </div>
+                <p class="text-gray-600 mb-4">Increase quality for sharper images</p>
+                <!-- Slider for Expansion Quality -->
+                <div class="mb-4">
+                    <label for="expandSlider" class="block text-gray-700 font-medium mb-2">
+                        Expansion Quality (1-100): <span id="expandQualityValue">50</span>
+                    </label>
+                    <input type="range" id="expandSlider" min="1" max="100" value="50" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                </div>
+                <!-- Size Info -->
+                <div class="mb-4 text-gray-700">
+                    <p>Original Size: <span id="expandOriginalSize">N/A</span></p>
+                    <p>Expanded Size: <span id="expandNewSize">N/A</span></p>
+                    <p>Size Increase: <span id="expandSizeChange">N/A</span></p>
+                </div>
+                <!-- Image Preview and Canvas -->
+                <div class="flex flex-col md:flex-row gap-4 mb-4">
+                    <div class="w-full md:w-1/2">
+                        <h4 class="text-gray-700 font-medium mb-2">Original Image</h4>
+                        <img id="expandOriginalImage" class="max-w-full h-auto rounded-md hidden" alt="Original Image">
+                    </div>
+                    <div class="w-full md:w-1/2">
+                        <h4 class="text-gray-700 font-medium mb-2">Expanded Image</h4>
+                        <canvas id="expandCanvas" class="max-w-full h-auto rounded-md border border-gray-300"></canvas>
+                    </div>
+                </div>
+                <!-- Download Button -->
+                <button id="expandDownloadBtn" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:bg-gray-400" disabled>
+                    Download Expanded Image
+                </button>
+            </div>
+        </div>
+
+        <!-- Bottom Ad Spaces -->
+        <div class="mt-6 space-y-6">
+            <!-- Bottom Leaderboard Ad -->
+            <div class="ad-placeholder h-24">
+                Ad Space (728x90)
+            </div>
+            <!-- Bottom Rectangle Ads -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="ad-placeholder h-64">
+                    Ad Space (300x250)
+                </div>
+                <div class="ad-placeholder h-64">
+                    Ad Space (300x250)
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="text-center mt-6 text-gray-600">
+            <p>© 2025 Photo Compressor & Expander. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        // DOM Elements
+        const imageInput = document.getElementById('imageInput');
+        const selectionScreen = document.getElementById('selectionScreen');
+        const compressBtn = document.getElementById('compressBtn');
+        const expandBtn = document.getElementById('expandBtn');
+        const compressSection = document.getElementById('compressSection');
+        const expandSection = document.getElementById('expandSection');
+        const compressBackBtn = document.getElementById('compressBackBtn');
+        const expandBackBtn = document.getElementById('expandBackBtn');
+
+        const compressOriginalImage = document.getElementById('compressOriginalImage');
+        const compressCanvas = document.getElementById('compressCanvas');
+        const compressSlider = document.getElementById('compressSlider');
+        const compressQualityValue = document.getElementById('compressQualityValue');
+        const compressDownloadBtn = document.getElementById('compressDownloadBtn');
+        const compressOriginalSize = document.getElementById('compressOriginalSize');
+        const compressNewSize = document.getElementById('compressNewSize');
+        const compressSizeChange = document.getElementById('compressSizeChange');
+
+        const expandOriginalImage = document.getElementById('expandOriginalImage');
+        const expandCanvas = document.getElementById('expandCanvas');
+        const expandSlider = document.getElementById('expandSlider');
+        const expandQualityValue = document.getElementById('expandQualityValue');
+        const expandDownloadBtn = document.getElementById('expandDownloadBtn');
+        const expandOriginalSize = document.getElementById('expandOriginalSize');
+        const expandNewSize = document.getElementById('expandNewSize');
+        const expandSizeChange = document.getElementById('expandSizeChange');
+
+        const compressCtx = compressCanvas.getContext('2d');
+        const expandCtx = expandCanvas.getContext('2d');
+
+        let currentImage = null;
+        let originalFileSize = 0;
+
+        // Show Compress Section
+        compressBtn.addEventListener('click', () => {
+            selectionScreen.classList.add('hidden');
+            compressSection.classList.remove('hidden');
+            expandSection.classList.add('hidden');
+            if (currentImage) processCompressImage();
+        });
+
+        // Show Expand Section
+        expandBtn.addEventListener('click', () => {
+            selectionScreen.classList.add('hidden');
+            expandSection.classList.remove('hidden');
+            compressSection.classList.add('hidden');
+            if (currentImage) processExpandImage();
+        });
+
+        // Back Buttons
+        compressBackBtn.addEventListener('click', resetToSelection);
+        expandBackBtn.addEventListener('click', resetToSelection);
+
+        function resetToSelection() {
+            selectionScreen.classList.remove('hidden');
+            compressSection.classList.add('hidden');
+            expandSection.classList.add('hidden');
+        }
+
+        // Update quality value displays
+        compressSlider.addEventListener('input', () => {
+            compressQualityValue.textContent = compressSlider.value;
+            if (currentImage) processCompressImage();
+        });
+
+        expandSlider.addEventListener('input', () => {
+            expandQualityValue.textContent = expandSlider.value;
+            if (currentImage) processExpandImage();
+        });
+
+        // Handle image upload
+        imageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                originalFileSize = file.size;
+                const reader = new FileReader();
+                reader.onload = () => {
+                    currentImage = new Image();
+                    currentImage.onload = () => {
+                        // Update images
+                        compressOriginalImage.src = reader.result;
+                        expandOriginalImage.src = reader.result;
+                        compressOriginalImage.classList.remove('hidden');
+                        expandOriginalImage.classList.remove('hidden');
+                        compressOriginalSize.textContent = formatSize(originalFileSize);
+                        expandOriginalSize.textContent = formatSize(originalFileSize);
+                        // Process based on active section
+                        if (!compressSection.classList.contains('hidden')) {
+                            processCompressImage();
+                        } else if (!expandSection.classList.contains('hidden')) {
+                            processExpandImage();
+                        }
+                        compressDownloadBtn.disabled = false;
+                        expandDownloadBtn.disabled = false;
+                    };
+                    currentImage.src = reader.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Process compression
+        function processCompressImage() {
+            if (!currentImage) return;
+
+            // Set canvas dimensions
+            compressCanvas.width = currentImage.width;
+            compressCanvas.height = currentImage.height;
+
+            // Draw image on canvas
+            compressCtx.drawImage(currentImage, 0, 0);
+
+            // Get quality from slider (1-100 maps to 0.01-1.0)
+            const quality = compressSlider.value / 100;
+
+            // Convert canvas to data URL with specified quality
+            const processedDataUrl = compressCanvas.toDataURL('image/jpeg', quality);
+
+            // Calculate new size
+            const newSize = dataURLToSize(processedDataUrl);
+            compressNewSize.textContent = formatSize(newSize);
+            const sizeChange = originalFileSize - newSize;
+            const percentage = ((sizeChange / originalFileSize) * 100).toFixed(2);
+            compressSizeChange.textContent = `${formatSize(sizeChange)} (${percentage}%)`;
+
+            // Update download button
+            compressDownloadBtn.onclick = () => {
+                const link = document.createElement('a');
+                link.href = processedDataUrl;
+                link.download = 'compressed-image.jpg';
+                link.click();
+            };
+        }
+
+        // Process expansion
+        function processExpandImage() {
+            if (!currentImage) return;
+
+            // Set canvas dimensions
+            expandCanvas.width = currentImage.width;
+            expandCanvas.height = currentImage.height;
+
+            // Draw image on canvas
+            expandCtx.drawImage(currentImage, 0, 0);
+
+            // Get quality from slider (1-100 maps to 0.01-1.0)
+            const quality = expandSlider.value / 100;
+
+            // Convert canvas to data URL with specified quality
+            const processedDataUrl = expandCanvas.toDataURL('image/jpeg', quality);
+
+            // Calculate new size
+            const newSize = dataURLToSize(processedDataUrl);
+            expandNewSize.textContent = formatSize(newSize);
+            const sizeChange = newSize - originalFileSize;
+            const percentage = ((sizeChange / originalFileSize) * 100).toFixed(2);
+            expandSizeChange.textContent = `${formatSize(sizeChange)} (${percentage}%)`;
+
+            // Update download button
+            expandDownloadBtn.onclick = () => {
+                const link = document.createElement('a');
+                link.href = processedDataUrl;
+                link.download = 'expanded-image.jpg';
+                link.click();
+            };
+        }
+
+        // Helper function to format file size
+        function formatSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+        }
+
+        // Helper function to estimate Data URL size
+        function dataURLToSize(dataURL) {
+            // Remove data URL prefix and decode base64
+            const base64String = dataURL.split(',')[1];
+            const padding = (base64String.match(/=+$/) || [''])[0].length;
+            const size = (base64String.length * 3) / 4 - padding;
+            return size;
+        }
+    </script>
+</body>
+</html>
