@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator Pro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .header {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .qr-container {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+        .ad-container {
+            background: #f0f0f0;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            text-align: center;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px dashed #ccc;
+        }
+        .tab-content {
+            padding: 1rem 0;
+        }
+        .nav-tabs .nav-link.active {
+            font-weight: bold;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #6e8efb;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            border: none;
+        }
+        #qrCode {
+            margin: 1rem auto;
+            padding: 1rem;
+            border: 1px solid #eee;
+            border-radius: 5px;
+        }
+        .download-btn {
+            margin-top: 1rem;
+        }
+        .footer {
+            background-color: #343a40;
+            color: white;
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with Ad Space -->
+    <div class="header text-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 mx-auto">
+                    <h1><i class="fas fa-qrcode"></i> QR Code Generator Pro</h1>
+                    <p class="lead">Convert text, photos, and screenshots to QR codes instantly</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Ad Banner -->
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="ad-container">
+                    <!-- AdSense Ad Unit -->
+                    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_PUBLISHER_ID"></script>
+                    <!-- Top Banner Ad -->
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
+                         data-ad-slot="YOUR_AD_SLOT_ID"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>
+                         (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="qr-container">
+                    <ul class="nav nav-tabs" id="qrTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="text-tab" data-bs-toggle="tab" data-bs-target="#text" type="button" role="tab">Text to QR</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="photo-tab" data-bs-toggle="tab" data-bs-target="#photo" type="button" role="tab">Photo to QR</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="screen-tab" data-bs-toggle="tab" data-bs-target="#screen" type="button" role="tab">Screenshot to QR</button>
+                        </li>
+                    </ul>
+                    
+                    <div class="tab-content" id="qrTabsContent">
+                        <!-- Text to QR Tab -->
+                        <div class="tab-pane fade show active" id="text" role="tabpanel">
+                            <div class="mb-3">
+                                <label for="textInput" class="form-label">Enter text, URL, or any content:</label>
+                                <textarea class="form-control" id="textInput" rows="3" placeholder="Type or paste your content here..."></textarea>
+                            </div>
+                            <button id="generateTextQR" class="btn btn-primary">Generate QR Code</button>
+                            <div class="text-center mt-3">
+                                <div id="qrCodeText"></div>
+                                <button id="downloadTextQR" class="btn btn-success download-btn" disabled>
+                                    <i class="fas fa-download"></i> Download QR Code
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Photo to QR Tab -->
+                        <div class="tab-pane fade" id="photo" role="tabpanel">
+                            <div class="mb-3">
+                                <label for="photoInput" class="form-label">Upload a photo:</label>
+                                <input class="form-control" type="file" id="photoInput" accept="image/*">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Photo Preview:</label>
+                                <div id="photoPreview" style="max-width: 100%; max-height: 300px; overflow: hidden;"></div>
+                            </div>
+                            <button id="generatePhotoQR" class="btn btn-primary" disabled>Generate QR Code</button>
+                            <div class="text-center mt-3">
+                                <div id="qrCodePhoto"></div>
+                                <button id="downloadPhotoQR" class="btn btn-success download-btn" disabled>
+                                    <i class="fas fa-download"></i> Download QR Code
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Screenshot to QR Tab -->
+                        <div class="tab-pane fade" id="screen" role="tabpanel">
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle"></i> Take a screenshot and paste it below (Ctrl+V or Command+V)
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Screenshot Preview:</label>
+                                <div id="screenPreview" style="border: 2px dashed #ccc; min-height: 200px; display: flex; align-items: center; justify-content: center;">
+                                    <p class="text-muted">Paste your screenshot here</p>
+                                </div>
+                            </div>
+                            <button id="generateScreenQR" class="btn btn-primary" disabled>Generate QR Code</button>
+                            <div class="text-center mt-3">
+                                <div id="qrCodeScreen"></div>
+                                <button id="downloadScreenQR" class="btn btn-success download-btn" disabled>
+                                    <i class="fas fa-download"></i> Download QR Code
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Middle Ad Banner -->
+        <div class="row">
+            <div class="col-12">
+                <div class="ad-container">
+                    <!-- AdSense Ad Unit -->
+                    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_PUBLISHER_ID"></script>
+                    <!-- Middle Rectangle Ad -->
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
+                         data-ad-slot="YOUR_AD_SLOT_ID_2"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>
+                         (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="row mt-4">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-font fa-3x mb-3" style="color: #6e8efb;"></i>
+                        <h5 class="card-title">Text to QR</h5>
+                        <p class="card-text">Convert any text, URL, or contact information into a scannable QR code instantly.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-image fa-3x mb-3" style="color: #a777e3;"></i>
+                        <h5 class="card-title">Photo to QR</h5>
+                        <p class="card-text">Upload images and generate QR codes that link directly to your photos.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-desktop fa-3x mb-3" style="color: #4e73df;"></i>
+                        <h5 class="card-title">Screenshot to QR</h5>
+                        <p class="card-text">Simply paste your screenshot and get a QR code to share it anywhere.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer with Ad Space -->
+    <div class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="ad-container">
+                        <!-- AdSense Ad Unit -->
+                        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_PUBLISHER_ID"></script>
+                        <!-- Footer Banner Ad -->
+                        <ins class="adsbygoogle"
+                             style="display:block"
+                             data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
+                             data-ad-slot="YOUR_AD_SLOT_ID_3"
+                             data-ad-format="auto"
+                             data-full-width-responsive="true"></ins>
+                        <script>
+                             (adsbygoogle = window.adsbygoogle || []).push({});
+                        </script>
+                    </div>
+                </div>
+                <div class="col-md-6 text-center text-md-start mt-3">
+                    <p>&copy; 2023 QR Code Generator Pro. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end mt-3">
+                    <a href="#" class="text-white me-3">Privacy Policy</a>
+                    <a href="#" class="text-white me-3">Terms of Service</a>
+                    <a href="#" class="text-white">Contact Us</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Text to QR Code
+            const textInput = document.getElementById('textInput');
+            const generateTextQR = document.getElementById('generateTextQR');
+            const qrCodeText = document.getElementById('qrCodeText');
+            const downloadTextQR = document.getElementById('downloadTextQR');
+            
+            generateTextQR.addEventListener('click', function() {
+                const text = textInput.value.trim();
+                if (text) {
+                    QRCode.toCanvas(text, { errorCorrectionLevel: 'H' }, function(err, canvas) {
+                        if (err) {
+                            console.error(err);
+                            alert('Error generating QR code. Please try again.');
+                            return;
+                        }
+                        
+                        qrCodeText.innerHTML = '';
+                        qrCodeText.appendChild(canvas);
+                        downloadTextQR.disabled = false;
+                        
+                        // Set download functionality
+                        downloadTextQR.onclick = function() {
+                            const link = document.createElement('a');
+                            link.download = 'text-qr-code.png';
+                            link.href = canvas.toDataURL('image/png');
+                            link.click();
+                        };
+                    });
+                } else {
+                    alert('Please enter some text to generate a QR code.');
+                }
+            });
+            
+            // Photo to QR Code
+            const photoInput = document.getElementById('photoInput');
+            const photoPreview = document.getElementById('photoPreview');
+            const generatePhotoQR = document.getElementById('generatePhotoQR');
+            const qrCodePhoto = document.getElementById('qrCodePhoto');
+            const downloadPhotoQR = document.getElementById('downloadPhotoQR');
+            let photoDataUrl = '';
+            
+            photoInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file && file.type.match('image.*')) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        photoDataUrl = e.target.result;
+                        photoPreview.innerHTML = `<img src="${photoDataUrl}" style="max-width: 100%; max-height: 300px;">`;
+                        generatePhotoQR.disabled = false;
+                    };
+                    
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            generatePhotoQR.addEventListener('click', function() {
+                if (photoDataUrl) {
+                    QRCode.toCanvas(photoDataUrl, { errorCorrectionLevel: 'H' }, function(err, canvas) {
+                        if (err) {
+                            console.error(err);
+                            alert('Error generating QR code. Please try again.');
+                            return;
+                        }
+                        
+                        qrCodePhoto.innerHTML = '';
+                        qrCodePhoto.appendChild(canvas);
+                        downloadPhotoQR.disabled = false;
+                        
+                        // Set download functionality
+                        downloadPhotoQR.onclick = function() {
+                            const link = document.createElement('a');
+                            link.download = 'photo-qr-code.png';
+                            link.href = canvas.toDataURL('image/png');
+                            link.click();
+                        };
+                    });
+                }
+            });
+            
+            // Screenshot to QR Code
+            const screenPreview = document.getElementById('screenPreview');
+            const generateScreenQR = document.getElementById('generateScreenQR');
+            const qrCodeScreen = document.getElementById('qrCodeScreen');
+            const downloadScreenQR = document.getElementById('downloadScreenQR');
+            let screenDataUrl = '';
+            
+            // Handle paste event for screenshots
+            document.addEventListener('paste', function(e) {
+                // Only handle paste in the screen tab
+                const activeTab = document.querySelector('.nav-tabs .nav-link.active').id;
+                if (activeTab !== 'screen-tab') return;
+                
+                const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+                
+                for (let i = 0; i < items.length; i++) {
+                    if (items[i].type.indexOf('image') !== -1) {
+                        const blob = items[i].getAsFile();
+                        const reader = new FileReader();
+                        
+                        reader.onload = function(e) {
+                            screenDataUrl = e.target.result;
+                            screenPreview.innerHTML = `<img src="${screenDataUrl}" style="max-width: 100%; max-height: 300px;">`;
+                            generateScreenQR.disabled = false;
+                        };
+                        
+                        reader.readAsDataURL(blob);
+                        break;
+                    }
+                }
+            });
+            
+            generateScreenQR.addEventListener('click', function() {
+                if (screenDataUrl) {
+                    QRCode.toCanvas(screenDataUrl, { errorCorrectionLevel: 'H' }, function(err, canvas) {
+                        if (err) {
+                            console.error(err);
+                            alert('Error generating QR code. Please try again.');
+                            return;
+                        }
+                        
+                        qrCodeScreen.innerHTML = '';
+                        qrCodeScreen.appendChild(canvas);
+                        downloadScreenQR.disabled = false;
+                        
+                        // Set download functionality
+                        downloadScreenQR.onclick = function() {
+                            const link = document.createElement('a');
+                            link.download = 'screenshot-qr-code.png';
+                            link.href = canvas.toDataURL('image/png');
+                            link.click();
+                        };
+                    });
+                }
+            });
+            
+            // Initialize tooltips
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
+    </script>
+</body>
+</html>
