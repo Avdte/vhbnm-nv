@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free online tools for your daily needs - compress photos, convert PDF to text, merge files, create QR codes and more!">
+    <meta name="keywords" content="photo compressor, PDF tools, QR code generator, barcode creator, file merger, online tools">
+    <title>All-In-One Tools | Free Online Utilities for Your Needs</title>
+    <style>
+        :root {
+            --primary: #4a6bff;
+            --secondary: #ff6b6b;
+            --dark: #2c3e50;
+            --light: #f8f9fa;
+            --success: #28a745;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--light);
+            min-height: 100vh;
+            background-attachment: fixed;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .ad-banner {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            text-align: center;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px dashed rgba(255, 255, 255, 0.3);
+        }
+        
+        .ad-banner p {
+            margin-bottom: 10px;
+        }
+        
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .tool-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .tool-card i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        
+        .tool-card h3 {
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+        
+        .tool-card p {
+            opacity: 0.8;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #3a5bef;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e05a5a;
+        }
+        
+        .tool-section {
+            display: none;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 30px;
+            margin-top: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .tool-section h2 {
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.8rem;
+        }
+        
+        .back-home {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .back-home i {
+            margin-right: 5px;
+        }
+        
+        .back-home:hover {
+            text-decoration: underline;
+        }
+        
+        .file-upload {
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            padding: 30px;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+        
+        .file-upload:hover {
+            border-color: var(--primary);
+        }
+        
+        .file-upload input {
+            display: none;
+        }
+        
+        .file-upload label {
+            display: block;
+            cursor: pointer;
+        }
+        
+        .file-upload i {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .options {
+            margin: 20px 0;
+        }
+        
+        .option-group {
+            margin-bottom: 15px;
+        }
+        
+        .option-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .option-group input, .option-group select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+        }
+        
+        .result {
+            margin-top: 30px;
+            text-align: center;
+            display: none;
+        }
+        
+        .result img, .result canvas {
+            max-width: 100%;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .download-btn {
+            margin-top: 15px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 50px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .donate {
+            background-color: var(--success);
+            padding: 10px 20px;
+            border-radius: 5px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            margin-top: 15px;
+        }
+        
+        .donate:hover {
+            background-color: #218838;
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            .tools-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            }
+            
+            .tool-section {
+                padding: 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            header h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/compressorjs/1.1.1/compressor.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>All-In-One Tools</h1>
+            <p>Free online tools for your daily needs. Simple, fast, and easy to use!</p>
+        </header>
+        
+        <div class="ad-banner">
+            <p>Advertisement</p>
+            <!-- Ad space -->
+            <div id="ad-space-1" style="min-height: 90px; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center;">
+                <p>Ad Space (728x90)</p>
+            </div>
+        </div>
+        
+        <div id="home-page">
+            <div class="tools-grid">
+                <div class="tool-card" onclick="showTool('compress-photo')">
+                    <i class="fas fa-compress-alt"></i>
+                    <h3>Compress Photo</h3>
+                    <p>Make your photos smaller without losing quality</p>
+                    <a class="btn">Use Tool</a>
+                </div>
+                
+                <div class="tool-card" onclick="showTool('pdf-to-text')">
+                    <i class="fas fa-file-alt"></i>
+                    <h3>PDF to Text</h3>
+                    <p>Extract text from your PDF documents</p>
+                    <a class="btn">Use Tool</a>
+                </div>
+                
+                <div class="tool-card" onclick="showTool('page-to-pdf')">
+                    <i class="fas fa-file-pdf"></i>
+                    <h3>Page to PDF</h3>
+                    <p>Convert web pages to PDF files</p>
+                    <a class="btn">Use Tool</a>
+                </div>
+                
+                <div class="tool-card" onclick="showTool('merge-pdf')">
+                    <i class="fas fa-copy"></i>
+                    <h3>Merge PDF</h3>
+                    <p>Combine multiple PDF files into one</p>
+                    <a class="btn">Use Tool</a>
+                </div>
+                
+                <div class="tool-card" onclick="showTool('merge-photo')">
+                    <i class="fas fa-images"></i>
+                    <h3>Merge Photos</h3>
+                    <p>Combine multiple images into one</p>
+                    <a class="btn">Use Tool</a>
+                </div>
+                
+                <div class="tool-card" onclick="showTool('qr-code')">
+                    <i class="fas fa-qrcode"></i>
+                    <h3>QR Code</h3>
+                    <p>Create custom QR codes for any link</p>
+                    <a class="btn">Use Tool</a>
+                </div>
+                
+                <div class="tool-card" onclick="showTool('barcode')">
+                    <i class="fas fa-barcode"></i>
+                    <h3>Barcode</h3>
+                    <p>Generate barcodes for products</p>
+                    <a class="btn">Use Tool</a>
+                </div>
+                
+                <div class="tool-card" onclick="showTool('text-to-speech')">
+                    <i class="fas fa-volume-up"></i>
+                    <h3>Text to Speech</h3>
+                    <p>Convert written text to spoken words</p>
+                    <a class="btn">Use Tool</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Compress Photo Tool -->
+        <div id="compress-photo" class="tool-section">
+            <a href="#" class="back-home" onclick="returnHome()"><i class="fas fa-arrow-left"></i> Back to Home</a>
+            <h2>Compress Photo</h2>
+            <p>Upload your photo to make it smaller without losing much quality.</p>
+            
+            <div class="ad-banner">
+                <p>Advertisement</p>
+                <div id="ad-space-2" style="min-height: 250px; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center;">
+                    <p>Ad Space (300x250)</p>
+                </div>
+            </div>
+            
+            <div class="file-upload">
+                <input type="file" id="photo-upload" accept="image/*">
+                <label for="photo-upload">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Click to upload your photo</p>
+                    <p>or drag and drop your file here</p>
+                </label>
+            </div>
+            
+            <div class="options">
+                <div class="option-group">
+                    <label for="quality">Quality (0-100):</label>
+                    <input type="range" id="quality" min="0" max="100" value="80">
+                    <span id="quality-value">80%</span>
+                </div>
+                
+                <div class="option-group">
+                    <label for="max-width">Maximum Width (pixels):</label>
+                    <input type="number" id="max-width" value="1200" min="100" max="5000">
+                </div>
+                
+                <div class="option-group">
+                    <label for="max-height">Maximum Height (pixels):</label>
+                    <input type="number" id="max-height" value="1200" min="100" max="5000">
+                </div>
+            </div>
+            
+            <button class="btn" onclick="compressPhoto()">Compress Photo</button>
+            
+            <div class="result" id="compress-result">
+                <h3>Your Compressed Photo</h3>
+                <div id="compressed-image-container"></div>
+                <p>Original size: <span id="original-size"></span></p>
+                <p>Compressed size: <span id="compressed-size"></span></p>
+                <p>Reduction: <span id="reduction"></span></p>
+                <a class="btn download-btn" id="download-compressed" download="compressed.jpg">Download Compressed Photo</a>
+            </div>
+        </div>
+        
+        <!-- PDF to Text Tool -->
+        <div id="pdf-to-text" class="tool-section">
+            <a href="#" class="back-home" onclick="returnHome()"><i class="fas fa-arrow-left"></i> Back to Home</a>
+            <h2>PDF to Text</h2>
+            <p>Extract text from your PDF documents easily.</p>
+            
+            <div class="file-upload">
+                <input type="file" id="pdf-upload" accept=".pdf">
+                <label for="pdf-upload">
+                    <i class="fas fa-file-pdf"></i>
+                    <p>Click to upload your PDF</p>
+                    <p>or drag and drop your file here</p>
+                </label>
+            </div>
+            
+            <button class="btn" onclick="extractText()">Extract Text</button>
+            
+            <div class="result" id="text-result">
+                <h3>Extracted Text</h3>
+                <textarea id="extracted-text" rows="10" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(0, 0, 0, 0.2); color: white;"></textarea>
+                <button class="btn download-btn" onclick="copyText()">Copy Text</button>
+            </div>
+        </div>
+        
+        <!-- Page to PDF Tool -->
+        <div id="page-to-pdf" class="tool-section">
+            <a href="#" class="back-home" onclick="returnHome()"><i class="fas fa-arrow-left"></i> Back to Home</a>
+            <h2>Page to PDF</h2>
+            <p>Convert any web page to PDF format.</p>
+            
+            <div class="options">
+                <div class="option-group">
+                    <label for="page-url">Enter Web Page URL:</label>
+                    <input type="url" id="page-url" placeholder="https://example.com">
+                </div>
+                
+                <div class="option-group">
+                    <label for="pdf-format">PDF Format:</label>
+                    <select id="pdf-format">
+                        <option value="a4">A4</option>
+                        <option value="letter">Letter</option>
+                        <option value="a3">A3</option>
+                    </select>
+                </div>
+                
+                <div class="option-group">
+                    <label for="pdf-orientation">Orientation:</label>
+                    <select id="pdf-orientation">
+                        <option value="portrait">Portrait</option>
+                        <option value="landscape">Landscape</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button class="btn" onclick="generatePagePDF()">Generate PDF</button>
+            
+            <div class="result" id="page-pdf-result">
+                <h3>Your PDF is Ready</h3>
+                <iframe id="pdf-preview" style="width: 100%; height: 500px; border: none; border-radius: 5px;"></iframe>
+                <a class="btn download-btn" id="download-page-pdf">Download PDF</a>
+            </div>
+        </div>
+        
+        <!-- Merge PDF Tool -->
+        <div id="merge-pdf" class="tool-section">
+            <a href="#" class="back-home" onclick="returnHome()"><i class="fas fa-arrow-left"></i> Back to Home</a>
+            <h2>Merge PDF</h2>
+            <p>Combine multiple PDF files into one document.</p>
+            
+            <div class="file-upload">
+                <input type="file" id="pdf-merge-upload" accept=".pdf" multiple>
+                <label for="pdf-merge-upload">
+                    <i class="fas fa-file-pdf"></i>
+                    <p>Click to upload PDF files</p>
+                    <p>or drag and drop files here</p>
+                </label>
+            </div>
+            
+            <div id="pdf-files-list" style="margin: 20px 0;"></div>
+            
+            <button class="btn" onclick="mergePDFs()">Merge PDFs</button>
+            
+            <div class="result" id="merge-pdf-result">
+                <h3>Merged PDF</h3>
+                <iframe id="merged-pdf-preview" style="width: 100%; height: 500px; border: none; border-radius: 5px;"></iframe>
+                <a class="btn download-btn" id="download-merged-pdf">Download Merged PDF</a>
+            </div>
+        </div>
+        
+        <!-- Merge Photo Tool -->
+        <div id="merge-photo" class="tool-section">
+            <a href="#" class="back-home" onclick="returnHome()"><i class="fas fa-arrow-left"></i> Back to Home</a>
+            <h2>Merge Photos</h2>
+            <p>Combine multiple images into one.</p>
+            
+            <div class="file-upload">
+                <input type="file" id="photo-merge-upload" accept="image/*" multiple>
+                <label for="photo-merge-upload">
+                    <i class="fas fa-images"></i>
+                    <p>Click to upload photos</p>
+                    <p>or drag and drop files here</p>
+                </label>
+            </div>
+            
+            <div id="photo-files-list" style="margin: 20px 0;"></div>
+            
+            <div class="options">
+                <div class="option-group">
+                    <label for="merge-layout">Layout:</label>
+                    <select id="merge-layout">
+                        <option value="horizontal">Horizontal</option>
+                        <option value="vertical">Vertical</option>
+                        <option value="grid">Grid</option>
+                    </select>
+                </div>
+                
+                <div class="option-group">
+                    <label for="merge-spacing">Spacing (pixels):</label>
+                    <input type="number" id="merge-spacing" value="10" min="0" max="100">
+                </div>
+                
+                <div class="option-group">
+                    <label for="merge-background">Background Color:</label>
+                    <input type="color" id="merge-background" value="#ffffff">
+                </div>
+            </div>
+            
+            <button class="btn" onclick="mergePhotos()">Merge Photos</button>
+            
+            <div class="result" id="merge-photo-result">
+                <h3>Merged Photo</h3>
+                <canvas id="merged-photo-canvas"></canvas>
+                <a class="btn download-btn" id="download-merged-photo" download="merged.jpg">Download Merged Photo</a>
+            </div>
+        </div>
+        
+        <!-- QR Code Tool -->
+        <div id="qr-code" class="tool-section">
+            <a href="#" class="back-home" onclick="returnHome()"><i class="fas fa-arrow-left"></i> Back to Home</a>
+            <h2>QR Code Generator</h2>
+            <p>Create custom QR codes for any link or text.</p>
+            
+            <div class="options">
+                <div class="option-group">
+                    <label for="qr-content">Content (URL or text):</label>
+                    <input type="text" id="qr-content" placeholder="https://example.com or any text">
+                </div>
+                
+                <div class="option-group">
+                    <label for="qr-color">Color:</label>
+                    <input type="color" id="qr-color" value="#000000">
+                </div>
+                
+                <div class="option-group">
+                    <label for="qr-bgcolor">Background Color:</label>
+                    <input type="color" id="qr-bgcolor" value="#ffffff">
+                </div>
+                
+                <div class="option-group">
+                    <label for="qr-size">Size (pixels):</label>
+                    <input type="number" id="qr-size" value="200" min="100" max="1000">
+                </div>
+                
+                <div class="option-group">
+                    <label for="qr-error">Error Correction:</label>
+                    <select id="qr-error">
+                        <option value="L">Low (7%)</option>
+                        <option value="M" selected>Medium (15%)</option>
+                        <option value="Q">Quartile (25%)</option>
+                        <option value="H">High (30%)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button class="btn" onclick="generateQRCode()">Generate QR Code</button>
+            
+            <div class="result" id="qr-result">
+                <h3>Your QR Code</h3>
+                <div id="qr-code-container"></div>
+                <a class="btn download-btn" id="download-qr" download="qrcode.png">Download QR Code</a>
+            </div>
+        </div>
+        
+        <!-- Barcode Tool -->
+        <div id="barcode" class="tool-section">
+            <a href="#" class="back-home" onclick="returnHome()"><i class="fas fa-arrow-left"></i> Back to Home</a>
+            <h2>Barcode Generator</h2>
+            <p>Create barcodes for products, inventory, or any use.</p>
+            
+            <div class="options">
+                <div class="option-group">
+                    <label for="barcode-content">Content (numbers or text):</label>
+                    <input type="text" id="barcode-content" placeholder="123456789">
+                </div>
+                
+                <div class="option-group">
+                    <label for="barcode-format">Barcode Format:</label>
+                    <select id="barcode-format">
+                        <option value="CODE128">CODE128</option>
+                        <option value="EAN13">EAN-13</option>
+                        <option value="UPC">UPC</option>
+                        <option value="CODE39">CODE39</option>
+                        <option value="ITF14">ITF-14</option>
+                    </select>
+                </div>
+                
+                <div class="option-group">
+                    <label for="barcode-color">Color:</label>
+                    <input type="color" id="barcode-color" value="#000000">
+                </div>
+                
+                <div class="option-group">
+                    <label for="barcode-bgcolor">Background Color:</label>
+                    <input type="color" id="barcode-bgcolor" value="#ffffff">
+                </div>
+                
+                <div class="option-group">
+                    <label for="barcode-width">Width (pixels):</label>
+                    <input type="number" id="barcode-width" value="2" min="1" max="10">
+                </div>
+                
+                <div class="option-group">
+                    <label for="barcode-height">Height (pixels):</label>
+                    <input type="number" id="barcode-height" value="100" min="50" max="500">
+                </div>
+                
+                <div class="option-group">
+                    <label for="barcode-display">Display Value:</label>
+                    <select id="barcode-display">
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button class="btn" onclick="generateBarcode()">Generate Barcode</button>
+            
+            <div class="result" id="barcode-result">
+                <h3>Your Barcode</h3>
+                <svg id="barcode-container"></svg>
+                <a class="btn download-btn" id="download-barcode" download="barcode.png">Download Barcode</a>
+            </div>
+        </div>
+        
+        <!-- Text to Speech Tool -->
+        <div id="text-to-speech" class="tool-section">
+            <a href="#" class="back-home" onclick="returnHome()"><i class="fas fa-arrow-left"></i> Back to Home</a>
+            <h2>Text to Speech</h2>
+            <p>Convert written text to spoken words.</p>
+            
+            <div class="options">
+                <div class="option-group">
+                    <label for="tts-text">Enter Text:</label>
+                    <textarea id="tts-text" rows="5" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(0, 0, 0, 0.2); color: white;" placeholder="Type or paste your text here"></textarea>
+                </div>
+                
+                <div class="option-group">
+                    <label for="tts-voice">Voice:</label>
+                    <select id="tts-voice"></select>
+                </div>
+                
+                <div class="option-group">
+                    <label for="tts-rate">Speed:</label>
+                    <input type="range" id="tts-rate" min="0.5" max="2" step="0.1" value="1">
+                    <span id="tts-rate-value">1</span>
+                </div>
+                
+                <div class="option-group">
+                    <label for="tts-pitch">Pitch:</label>
+                    <input type="range" id="tts-pitch" min="0.5" max="2" step="0.1" value="1">
+                    <span id="tts-pitch-value">1</span>
+                </div>
+            </div>
+            
+            <button class="btn" onclick="speakText()">Speak</button>
+            <button class="btn btn-secondary" onclick="stopSpeaking()">Stop</button>
+            <button class="btn" onclick="downloadSpeech()">Download as MP3</button>
+            
+            <div class="result" id="tts-result">
+                <audio id="tts-audio" controls style="width: 100%; margin-top: 20px;"></audio>
+            </div>
+        </div>
+        
+        <div class="ad-banner">
+            <p>Advertisement</p>
+            <div id="ad-space-3" style="min-height: 250px; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center;">
+                <p>Ad Space (300x250)</p>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2023 All-In-One Tools. All rights reserved.</p>
+            <p>Free online tools for your daily needs.</p>
+            <a href="mailto:abdulumar5388@gmail.com" class="donate">Donate to Support Us</a>
+        </footer>
+    </div>
+
+    <script>
+        // Initialize PDF.js worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
+        
+        // Current active tool
+        let currentTool = null;
+        
+        // Show selected tool and hide others
+        function showTool(toolId) {
+            // Hide all tool sections
+            document.querySelectorAll('.tool-section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Hide home page
+            document.getElementById('home-page').style.display = 'none';
+            
+            // Show selected tool
+            document.getElementById(toolId).style.display = 'block';
+            currentTool = toolId;
+            
+            // Load voices for text-to-speech if that's the selected tool
+            if (toolId === 'text-to-speech') {
+                loadVoices();
+            }
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+        
+        // Return to home page
+        function returnHome() {
+            // Hide all tool sections
+            document.querySelectorAll('.tool-section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Show home page
+            document.getElementById('home-page').style.display = 'block';
+            currentTool = null;
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+            
+            return false; // Prevent default anchor behavior
+        }
+        
+        // Compress Photo Tool
+        function compressPhoto() {
+            const fileInput = document.getElementById('photo-upload');
+            const quality = parseInt(document.getElementById('quality').value) / 100;
+            const maxWidth = parseInt(document.getElementById('max-width').value);
+            const maxHeight = parseInt(document.getElementById('max-height').value);
+            
+            if (!fileInput.files || fileInput.files.length === 0) {
+                alert('Please select a photo first!');
+                return;
+            }
+            
+            const file = fileInput.files[0];
+            const originalSize = (file.size / 1024).toFixed(2) + ' KB';
+            
+            new Compressor(file, {
+                quality: quality,
+                maxWidth: maxWidth,
+                maxHeight: maxHeight,
+                success(result) {
+                    const compressedSize = (result.size / 1024).toFixed(2) + ' KB';
+                    const reduction = (((file.size - result.size) / file.size) * 100).toFixed(2) + '%';
+                    
+                    // Display compressed image
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        const container = document.getElementById('compressed-image-container');
+                        container.innerHTML = '';
+                        container.appendChild(img);
+                        
+                        // Update result info
+                        document.getElementById('original-size').textContent = originalSize;
+                        document.getElementById('compressed-size').textContent = compressedSize;
+                        document.getElementById('reduction').textContent = reduction;
+                        
+                        // Set download link
+                        const downloadLink = document.getElementById('download-compressed');
+                        downloadLink.href = e.target.result;
+                        
+                        // Show result
+                        document.getElementById('compress-result').style.display = 'block';
+                    };
+                    reader.readAsDataURL(result);
+                },
+                error(err) {
+                    console.error(err.message);
+                    alert('Error compressing photo: ' + err.message);
+                }
+            });
+        }
+        
+        // Update quality value display
+        document.getElementById('quality').addEventListener('input', function() {
+            document.getElementById('quality-value').textContent = this.value + '%';
+        });
+        
+        // PDF to Text Tool
+        async function extractText() {
+            const fileInput = document.getElementById('pdf-upload');
+            
+            if (!fileInput.files || fileInput.files.length === 0) {
+                alert('Please select a PDF file first!');
+                return;
+            }
+            
+            const file = fileInput.files[0];
+            const fileReader = new FileReader();
+            
+            fileReader.onload = async function() {
+                try {
+                    const typedArray = new Uint8Array(this.result);
+                    const pdf = await pdfjsLib.getDocument(typedArray).promise;
+                    let fullText = '';
+                    
+                    // Extract text from each page
+                    for (let i = 1; i <= pdf.numPages; i++) {
+                        const page = await pdf.getPage(i);
+                        const textContent = await page.getTextContent();
+                        const textItems = textContent.items.map(item => item.str);
+                        fullText += textItems.join(' ') + '\n\n';
+                    }
+                    
+                    document.getElementById('extracted-text').value = fullText;
+                    document.getElementById('text-result').style.display = 'block';
+                } catch (error) {
+                    console.error('Error extracting text:', error);
+                    alert('Error extracting text from PDF: ' + error.message);
+                }
+            };
+            
+            fileReader.readAsArrayBuffer(file);
+        }
+        
+        function copyText() {
+            const textarea = document.getElementById('extracted-text');
+            textarea.select();
+            document.execCommand('copy');
+            alert('Text copied to clipboard!');
+        }
+        
+        // Page to PDF Tool
+        async function generatePagePDF() {
+            const url = document.getElementById('page-url').value;
+            const format = document.getElementById('pdf-format').value;
+            const orientation = document.getElementById('pdf-orientation').value;
+            
+            if (!url) {
+                alert('Please enter a valid URL!');
+                return;
+            }
+            
+            try {
+                // In a real implementation, you would need a server-side component to fetch the page
+                // This is a simplified client-side only version that converts the current page
+                alert('Note: In this demo, we\'ll convert the current page to PDF. In a real implementation, you would fetch the URL you specified.');
+                
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF({
+                    orientation: orientation,
+                    unit: 'mm',
+                    format: format
+                });
+                
+                // Use html2canvas to capture the page
+                const element = document.body; // In real implementation, you'd fetch the target page
+                const canvas = await html2canvas(element);
+                const imgData = canvas.toDataURL('image/jpeg', 1.0);
+                
+                // Calculate dimensions to fit the PDF page
+                const pdfWidth = doc.internal.pageSize.getWidth();
+                const pdfHeight = doc.internal.pageSize.getHeight();
+                const imgRatio = canvas.width / canvas.height;
+                let imgWidth = pdfWidth;
+                let imgHeight = pdfHeight;
+                
+                if (imgRatio > 1) {
+                    imgHeight = pdfWidth / imgRatio;
+                } else {
+                    imgWidth = pdfHeight * imgRatio;
+                }
+                
+                doc.addImage(imgData, 'JPEG', 0, 0, imgWidth, imgHeight);
+                const pdfData = doc.output('datauristring');
+                
+                // Show PDF preview
+                const pdfPreview = document.getElementById('pdf-preview');
+                pdfPreview.src = pdfData;
+                
+                // Set download link
+                const downloadLink = document.getElementById('download-page-pdf');
+                downloadLink.href = pdfData;
+                
+                // Show result
+                document.getElementById('page-pdf-result').style.display = 'block';
+            } catch (error)
